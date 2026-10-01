@@ -68,6 +68,33 @@ function updateThemeUI(theme) {
     }
 }
 
+/**
+ * Toggles or explicitly sets the mobile sidebar and backdrop overlay visibility.
+ * @param {boolean} [forceState] Optional explicit state to set (true to open, false to close).
+ */
+function toggleSidebar(forceState) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar) return;
+
+    const isActive = sidebar.classList.contains('active') || 
+                     sidebar.classList.contains('open') || 
+                     sidebar.classList.contains('show');
+
+    const shouldBeActive = (typeof forceState === 'boolean') ? forceState : !isActive;
+
+    if (shouldBeActive) {
+        sidebar.classList.add('active', 'open', 'show');
+        if (overlay) overlay.classList.add('active', 'open', 'show');
+    } else {
+        sidebar.classList.remove('active', 'open', 'show');
+        if (overlay) overlay.classList.remove('active', 'open', 'show');
+    }
+}
+
+// Expose globally if needed
+window.toggleSidebar = toggleSidebar;
+
 function setupNavigationListeners() {
     // Sidebar nav links
     const navLinks = document.querySelectorAll('.nav-link');
@@ -76,15 +103,36 @@ function setupNavigationListeners() {
             e.preventDefault();
             const tab = link.getAttribute('data-tab');
             navigateToTab(tab);
+            // Automatically close mobile sidebar when selecting a menu item
+            if (window.innerWidth <= 768) {
+                toggleSidebar(false);
+            }
         });
     });
 
-    // Sidebar Toggle Mobile
+    // Mobile Sidebar Toggle Button (hamburger in topbar)
     const toggleBtn = document.getElementById('btn-sidebar-toggle');
-    const sidebar = document.getElementById('sidebar');
-    if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('show');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidebar();
+        });
+    }
+
+    // Mobile Sidebar Close Button ('×' in sidebar header)
+    const closeBtn = document.getElementById('btn-sidebar-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidebar(false);
+        });
+    }
+
+    // Mobile Backdrop Overlay Click
+    const overlay = document.getElementById('sidebar-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            toggleSidebar(false);
         });
     }
 }
