@@ -103,6 +103,41 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid #1E293B;
 }
 
+/* Mobile Sidebar Close Button & Backdrop Overlay (Hidden on desktop) */
+.sidebar-close-btn {
+    display: none;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+.sidebar-close-btn:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
 .brand-icon {
     width: 42px;
     height: 42px;
@@ -772,12 +807,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive Breakpoints */
 @media (max-width: 992px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar.show {
-        transform: translateX(0);
-    }
     .main-content {
         margin-left: 0;
     }
@@ -786,5 +815,41 @@ h1, h2, h3, h4, h5, h6 {
     }
     .search-box {
         width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: -280px;
+        width: 260px;
+        z-index: 1000;
+        transform: none;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.active,
+    .sidebar.open,
+    .sidebar.show {
+        left: 0;
+        transform: none;
+    }
+
+    .sidebar-close-btn {
+        display: flex;
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+
+    .sidebar-overlay.active,
+    .sidebar-overlay.open,
+    .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
     }
 }
