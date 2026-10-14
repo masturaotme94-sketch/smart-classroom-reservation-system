@@ -103,11 +103,6 @@ function updateUserRoleUI() {
     }
 }
 
-function quickFillLogin(email, password) {
-    document.getElementById('login-email').value = email;
-    document.getElementById('login-password').value = password;
-}
-
 // ==========================================
 // ==========================================
 // MANAGE USERS MODULE (FULL CRUD)
